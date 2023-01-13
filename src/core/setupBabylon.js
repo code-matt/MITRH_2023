@@ -13,7 +13,6 @@ const createBabylon = async () => {
     scene.createDefaultEnvironment()
 
     const mainRenderLoop = function() {
-        console.log("rendering")
         scene.render()
     }
 
@@ -24,21 +23,6 @@ const createBabylon = async () => {
     MeshBuilder.CreateBox('boxxx')
 
     camera.attachControl()
-
-    // const xrHelper = await WebXRExperienceHelper.CreateAsync(scene);
-
-    // const ground = MeshBuilder.CreateGround("ground", {height: 100, width: 100, subdivisions: 4});
-    // ground.visibility = 0
-
-    // var xrHelper = await scene.createDefaultXRExperienceAsync({
-    // //   floorMeshes: [ground],
-    //     disableDefaultUI: false
-        
-    // });
-
-    // xrHelper.enterExitUI = true
-
-    // xrHelper.enterExitUI()
 
     WebXRExperienceHelper.CreateAsync(scene).then(async (xrHelper) => {
         const sessionManager = await xrHelper.enterXRAsync("immersive-vr", "local-floor" /*, optionalRenderTarget */ );

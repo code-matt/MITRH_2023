@@ -3,6 +3,7 @@ import './App.css';
 import { useState } from 'react';
 import createBabylon from './core/setupBabylon';
 import './main.scss'
+import createConnectSetupMulti from './core/SocketConnect';
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
       {!appEntered && <header className="App-header" onClick={async () => {
         setAppEntered(true)
         await createBabylon()
+        createConnectSetupMulti()
         console.log("Enter clicked..")
       }} style={{zIndex: 999999999999999, position: 'fixed'}}>
         <p>Enter The Garden</p>
