@@ -1,23 +1,25 @@
 import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react';
+import createBabylon from './core/setupBabylon';
+import './main.scss'
 
 function App() {
+
+  const [ appEntered, setAppEntered ] = useState(false)
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {!appEntered && <header className="App-header" onClick={() => {
+        setAppEntered(true)
+        createBabylon()
+        console.log("Enter clicked..")
+      }} style={{zIndex: 999999999999999, position: 'fixed'}}>
+        <p>Enter The Garden</p>
+      </header>}
+      <canvas style={{
+
+      }} id="mainCanvas"></canvas>
     </div>
   );
 }
