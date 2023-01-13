@@ -10,15 +10,15 @@ function App() {
 
   return (
     <div className="App">
-      {!appEntered && <header className="App-header" onClick={() => {
+      {!appEntered && <header className="App-header" onClick={async () => {
         setAppEntered(true)
-        createBabylon()
+        await createBabylon()
         console.log("Enter clicked..")
       }} style={{zIndex: 999999999999999, position: 'fixed'}}>
         <p>Enter The Garden</p>
       </header>}
       <canvas style={{
-
+        
       }} id="mainCanvas"></canvas>
     </div>
   );
