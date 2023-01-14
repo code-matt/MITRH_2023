@@ -1,4 +1,4 @@
-import { MeshBuilder } from "@babylonjs/core"
+import { MeshBuilder, Quaternion } from "@babylonjs/core"
 import * as Colyseus from "colyseus.js"
 
 import {
@@ -52,7 +52,25 @@ const createConnectSetupMulti = async ({ scene }) => {
             console.log(("a friendo connected"))
             connectedClients[p.sessionId] = createPlayer(p)
             p.transformData.onChange = (changes) => {
-                console.log("the guys transform data changed")
+                changes.forEach(c => {
+                    switch(c.field) {
+                        case 'pX':
+                        case 'pY':
+                        case 'pZ':
+                            connectedClients[p.sessionId].posForBuffer[`${c.field.replace('p', '').toLowerCase()}`] = c.value
+                            break
+                        case 'rX':
+                        case 'rY':
+                        case 'rZ':
+                        case 'rW':
+                            connectedClients[p.sessionId].rotForBuffer[`${c.field.replace('r', '').toLowerCase()}`] = c.value
+                            break
+                        default:
+                            break
+
+                    }
+                })
+                connectedClients[p.sessionId].buffer.appendBuffer(connectedClients[p.sessionId].posForBuffer, null, connectedClients[p.sessionId].rotForBuffer, null) 
             }
         }
         
@@ -85,6 +103,8 @@ const createPlayer = (c) => {
         rW: 0
     }
 
+    avatar.rotationQuaternion = new Quaternion()
+
     return {
         client: c,
         avatar,
@@ -96,9 +116,9 @@ const createPlayer = (c) => {
 }
 
 const cleanupPlayer = (c) => {
-    let cc = connectedClients[c.id]
+    let cc = connectedClients[c.sessionId]
     cc.avatar.dispose()
-    delete connectedClients[c.id]
+    delete connectedClients[c.sessionId]
 }
 
 export default createConnectSetupMulti
