@@ -7,9 +7,13 @@ import createConnectSetupMulti from './core/SocketConnect';
 import _ from 'lodash'
 import HomeScreen from './react/screens/Home'
 
+import "@babylonjs/loaders/glTF";
+import "@babylonjs/loaders";
+
 import {
   BufferState
 } from "buffered-interpolation-babylon";
+import loadScene from './core/loadScene';
 
 function App() {
 
@@ -43,6 +47,7 @@ function App() {
       data.rZ = camera.absoluteRotation.z;
       data.rW = camera.absoluteRotation.w;
       room.send("transform_update", data)
+
     }
 
     let updateCameraPosThrottled = _.throttle(handleUpdatedCamera, 250)
