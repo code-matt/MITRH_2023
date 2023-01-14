@@ -1,0 +1,54 @@
+.homescreen {
+    padding-left: 50px;
+    padding-right: 50px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    color: rgb(232, 115, 255);
+    background-color: #7086ff;
+    z-index: 9999999999999999;
+    position: fixed;
+    width: calc(100vw - 100px);
+    // #95ffd8
+    .banner-container {
+        justify-content: center;
+        flex: 0.2;
+        align-items: center;
+        display: flex;
+        h1 {
+            font-size: 100px;
+            font-weight: 600;
+            letter-spacing: 3px;
+        }
+    }
+    .top-container {
+        display: flex;
+        justify-content: space-between;
+        flex: 0.6;
+        align-items: center;
+        .card {
+            flex: 0.3;
+        }
+    }
+    .bottom-container {
+        flex: 0.2;
+        display: flex;
+        justify-content: center;
+        // align-items: center;
+        .button {
+            padding: 20px 10px;
+            width: fit-content;
+            height: fit-content;
+            color: #fff;
+            font-size: 40px;
+            letter-spacing: 3px;
+            border: 3px dashed #95ffd8;
+            border-radius: 5px;
+            font-weight: 600;
+            &:hover {
+                color: #95ffd8;
+                cursor: pointer;
+            }
+        }
+    }
+}
