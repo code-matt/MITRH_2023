@@ -22,7 +22,7 @@ function App() {
     let coreStuff = await createBabylon()
     let { connectedClients, room } = await createConnectSetupMulti(coreStuff)
 
-    let { camera } = coreStuff
+    let { camera, scene, engine } = coreStuff
 
     const handleUpdatedCamera = function () {
       let data = {
@@ -46,7 +46,6 @@ function App() {
     }
 
     let updateCameraPosThrottled = _.throttle(handleUpdatedCamera, 250)
-    let { scene, engine } = coreStuff
 
     const updateMulti = () => {
       _.forEach(connectedClients, (client) => {
@@ -63,7 +62,7 @@ function App() {
     const mainRenderLoop = () => {
       scene.render()
       updateCameraPosThrottled() // send to colyseus
-      updateMulti() // process remote players movement smoothly using the interp buffer package
+      //updateMulti() // process remote players movement smoothly using the interp buffer package
     }
 
     engine.runRenderLoop(mainRenderLoop)

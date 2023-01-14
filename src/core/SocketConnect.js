@@ -1,4 +1,4 @@
-import { MeshBuilder, Quaternion } from "@babylonjs/core"
+import { Color3, MeshBuilder, Quaternion, StandardMaterial } from "@babylonjs/core"
 import * as Colyseus from "colyseus.js"
 
 import {
@@ -7,8 +7,11 @@ import {
   } from "buffered-interpolation-babylon";
 
 const connectedClients = {}
-
+let avatarMaterial
 const createConnectSetupMulti = async ({ scene }) => {
+    avatarMaterial = new StandardMaterial("avatarMat", scene)
+    avatarMaterial.emissiveColor = new Color3(255, 255, 255)
+
     console.log("connecting to local colyseus...")
 
     const wsURL = "ws://localhost:2567"
@@ -90,6 +93,9 @@ const createConnectSetupMulti = async ({ scene }) => {
 
 const createPlayer = (c) => {
     const avatar = MeshBuilder.CreateSphere("player" + c.sessionId)
+
+    avatar.material = avatarMaterial
+
     let posForBuffer = {
         pX: 0,
         pY: 0,
