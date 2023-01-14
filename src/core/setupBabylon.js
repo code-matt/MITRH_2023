@@ -12,15 +12,9 @@ const createBabylon = async () => {
 
     scene.createDefaultEnvironment()
 
-    const mainRenderLoop = function() {
-        scene.render()
-    }
-
-    engine.runRenderLoop(mainRenderLoop)
-
     console.log("Babylon finished init...")
 
-    MeshBuilder.CreateBox('boxxx')
+    // MeshBuilder.CreateBox('boxxx')
 
     camera.attachControl()
 
