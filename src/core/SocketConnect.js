@@ -1,4 +1,4 @@
-import { Color3, MeshBuilder, Quaternion, StandardMaterial } from "@babylonjs/core"
+import { Color3, MeshBuilder, Quaternion, StandardMaterial, Vector3 } from "@babylonjs/core"
 import * as Colyseus from "colyseus.js"
 
 import {
@@ -96,18 +96,8 @@ const createPlayer = (c) => {
 
     avatar.material = avatarMaterial
 
-    let posForBuffer = {
-        pX: 0,
-        pY: 0,
-        pZ: 0
-    }
-
-    let rotForBuffer = {
-        rX: 0,
-        rY: 0,
-        rZ: 0,
-        rW: 0
-    }
+    let posForBuffer = new Vector3(0, 1.6, 0)
+    let rotForBuffer = new Quaternion()
 
     avatar.rotationQuaternion = new Quaternion()
 

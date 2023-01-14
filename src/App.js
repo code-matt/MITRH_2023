@@ -53,7 +53,7 @@ function App() {
               client.buffer.update(scene.deltaTime)
               if (client.buffer.state === BufferState.PLAYING) {
                   client.avatar.position.copyFrom(client.buffer.position);
-                  client.avatar.rotationQuaternion.copyFrom(client.buffer.quaternion);
+                  // client.avatar.rotationQuaternion.copyFrom(client.buffer.quaternion);
               }
           }
       })
@@ -62,7 +62,7 @@ function App() {
     const mainRenderLoop = () => {
       scene.render()
       updateCameraPosThrottled() // send to colyseus
-      //updateMulti() // process remote players movement smoothly using the interp buffer package
+      updateMulti() // process remote players movement smoothly using the interp buffer package
     }
 
     engine.runRenderLoop(mainRenderLoop)
