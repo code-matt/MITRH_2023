@@ -1,4 +1,4 @@
-import { ArcRotateCamera, Color3, DirectionalLight, Engine, FreeCamera, FreeCameraDeviceOrientationInput, Mesh, MeshBuilder, Scene, ShadowGenerator, StandardMaterial, UniversalCamera, Vector3, WebXRExperienceHelper } from "@babylonjs/core";
+import { ArcRotateCamera, Color3, DirectionalLight, Engine, FreeCamera, FreeCameraDeviceOrientationInput, HemisphericLight, Mesh, MeshBuilder, Scene, ShadowGenerator, StandardMaterial, UniversalCamera, Vector3, WebXRExperienceHelper } from "@babylonjs/core";
 import { AdvancedDynamicTexture, Button, ColorPicker, Control, StackPanel, TextBlock } from "@babylonjs/gui";
 import { GridMaterial } from '@babylonjs/materials'
 import loadScene from "./loadScene";
@@ -13,6 +13,9 @@ const createBabylon = async () => {
     scene.clearColor = Color3.Black();
 
     var camera = new UniversalCamera('camera', new Vector3(0, 1.6, 0), scene)
+
+    camera.maxZ = 1000
+    camera.minZ = 0.1
 
     var ground = MeshBuilder.CreatePlane("ground", {
         width: 100,
@@ -32,6 +35,8 @@ const createBabylon = async () => {
 	groundMaterial.opacity = 0.98;
 
     ground.material = groundMaterial
+
+    const light = new HemisphericLight("light", new Vector3(1, 1, 0));
 
     // scene.createDefaultEnvironment()
 
