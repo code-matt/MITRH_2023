@@ -1,4 +1,4 @@
-import { Color3, MeshBuilder, Quaternion, StandardMaterial, Vector3 } from "@babylonjs/core"
+import { Color3, MeshBuilder, ParticleHelper, ParticleSystem, Quaternion, StandardMaterial, Texture, Vector3 } from "@babylonjs/core"
 import * as Colyseus from "colyseus.js"
 
 import {
@@ -23,10 +23,10 @@ const createConnectSetupMulti = async ({ scene }) => {
     room.onStateChange.once((state) => {
         console.log("setting up state events...")
 
-        state.players.forEach(p => {
+        state.players.forEach(async p => {
             if (p.sessionId !== room.sessionId) {
                 console.log(("a friendo was already in the room!"))
-                connectedClients[p.sessionId] = createPlayer(p)
+                connectedClients[p.sessionId] = await createPlayer(p, scene)
                 p.transformData.onChange = (changes) => {
                     changes.forEach(c => {
                         switch(c.field) {
@@ -51,9 +51,9 @@ const createConnectSetupMulti = async ({ scene }) => {
             }
         })
 
-        state.players.onAdd = p => {
+        state.players.onAdd = async p => {
             console.log(("a friendo connected"))
-            connectedClients[p.sessionId] = createPlayer(p)
+            connectedClients[p.sessionId] = await createPlayer(p, scene)
             p.transformData.onChange = (changes) => {
                 changes.forEach(c => {
                     switch(c.field) {
@@ -91,8 +91,21 @@ const createConnectSetupMulti = async ({ scene }) => {
     }
 }
 
-const createPlayer = (c) => {
+const createPlayer = async (c, scene) => {
     const avatar = MeshBuilder.CreateSphere("player" + c.sessionId)
+    // avatar.isVisible = false
+    let particleSystem = await ParticleHelper.ParseFromFileAsync("", "particles/soulOrb.json", scene, false)
+    // ParticleHelper.CreateAsync("soulOrb", scene).then((particleSystem) => {
+    //     particleSystem.particleTexture = new Texture("images/particles-single.png")
+    //     particleSystem.emitter = avatar
+    //     particleSystem.start()
+    // });
+    // debugger
+    // particleSystem.particleTexture.dispose()
+    // particleSystem.particleTexture = null
+    // particleSystem.particleTexture = new Texture("images/particles-single.png")
+    particleSystem.emitter = avatar
+    particleSystem.start()
 
     avatar.material = avatarMaterial
 

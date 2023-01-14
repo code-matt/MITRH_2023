@@ -1,4 +1,4 @@
-import { ArcRotateCamera, Color3, CubeTexture, DirectionalLight, Engine, FreeCamera, FreeCameraDeviceOrientationInput, HemisphericLight, Mesh, MeshBuilder, Scene, ShadowGenerator, StandardMaterial, Texture, UniversalCamera, Vector3, WebXRExperienceHelper } from "@babylonjs/core";
+import { ArcRotateCamera, Color3, CubeTexture, DirectionalLight, Engine, FreeCamera, FreeCameraDeviceOrientationInput, HemisphericLight, Mesh, MeshBuilder, ParticleSystemSet, Scene, ShadowGenerator, StandardMaterial, Texture, UniversalCamera, Vector3, WebXRExperienceHelper } from "@babylonjs/core";
 import { AdvancedDynamicTexture, Button, ColorPicker, Control, StackPanel, TextBlock } from "@babylonjs/gui";
 import { GridMaterial } from '@babylonjs/materials'
 import loadScene from "./loadScene";
@@ -11,6 +11,8 @@ const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
     var scene = new Scene(engine)
 
     scene.clearColor = Color3.Black();
+
+    ParticleSystemSet.BaseAssetsUrl = "/"
 
     var camera = new UniversalCamera('camera', new Vector3(0, 1.6, 0), scene)
 
