@@ -3,30 +3,31 @@ import { CubeTexture, MeshBuilder, SceneLoader, StandardMaterial, Texture } from
 const loadScene = async ({ scene }) => {
     let terrainContainer = await SceneLoader.LoadAssetContainerAsync(
         "/",
-        "Terrian.glb",
+        "Terrain.glb",
         scene
     )
     terrainContainer.addAllToScene()
 
-
-    var environment_map = CubeTexture.CreateFromPrefilteredData(
-        'environment_3.env',
+    let grassContainer = await SceneLoader.LoadAssetContainerAsync(
+        "/",
+        "Temple.glb",
         scene
-    );
-    // var map_rotation = Math.PI; // in degrees
-    scene.environmentTexture = environment_map;
+    )
+    grassContainer.addAllToScene()
 
-    const skybox = MeshBuilder.CreateBox("skyBox", { size: 1000.0 }, scene);
-    const skyboxMaterial = new StandardMaterial("skyBox", scene);
-    skyboxMaterial.backFaceCulling = false;
-    skyboxMaterial.disableLighting = true;
-    skybox.material = skyboxMaterial;
+    let templeContainer = await SceneLoader.LoadAssetContainerAsync(
+        "/",
+        "Grass.glb",
+        scene
+    )
+    templeContainer.addAllToScene()
 
-    skybox.infiniteDistance = true;
-
-    skyboxMaterial.disableLighting = true;
-    skyboxMaterial.reflectionTexture = environment_map
-    skyboxMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
+    let treeContainer = await SceneLoader.LoadAssetContainerAsync(
+        "/",
+        "Tree.glb",
+        scene
+    )
+    treeContainer.addAllToScene()
 }
 
 export default loadScene

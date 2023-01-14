@@ -1,9 +1,9 @@
-import { ArcRotateCamera, Color3, DirectionalLight, Engine, FreeCamera, FreeCameraDeviceOrientationInput, HemisphericLight, Mesh, MeshBuilder, Scene, ShadowGenerator, StandardMaterial, UniversalCamera, Vector3, WebXRExperienceHelper } from "@babylonjs/core";
+import { ArcRotateCamera, Color3, CubeTexture, DirectionalLight, Engine, FreeCamera, FreeCameraDeviceOrientationInput, HemisphericLight, Mesh, MeshBuilder, Scene, ShadowGenerator, StandardMaterial, Texture, UniversalCamera, Vector3, WebXRExperienceHelper } from "@babylonjs/core";
 import { AdvancedDynamicTexture, Button, ColorPicker, Control, StackPanel, TextBlock } from "@babylonjs/gui";
 import { GridMaterial } from '@babylonjs/materials'
 import loadScene from "./loadScene";
 
-const createBabylon = async () => {
+const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
     let canvas = document.getElementById("mainCanvas")
 
     var engine = new Engine(canvas)
@@ -13,6 +13,13 @@ const createBabylon = async () => {
     scene.clearColor = Color3.Black();
 
     var camera = new UniversalCamera('camera', new Vector3(0, 1.6, 0), scene)
+
+    let coreStuff = {
+        canvas,
+        engine,
+        scene,
+        camera
+    }
 
     camera.maxZ = 1000
     camera.minZ = 0.1
@@ -86,6 +93,7 @@ const createBabylon = async () => {
         nextButton.dispose();
         nextButtonBox.dispose();
         skipButtonBox.dispose();
+        connectAndBeginExperienceFxn(coreStuff)
     })
 
     nextButton.onPointerDownObservable.add(() => {
@@ -94,6 +102,7 @@ const createBabylon = async () => {
             nextButton.dispose();
             nextButtonBox.dispose();
             skipButtonBox.dispose();
+            connectAndBeginExperienceFxn(coreStuff)
         }
         screenNumber+=1;
         panelTexture.parseFromURLAsync(`textures/screen_${screenNumber}.json`);
@@ -107,14 +116,29 @@ const createBabylon = async () => {
         // no xr...
     })
 
-    loadScene({ scene })
 
-    return {
-        canvas,
-        engine,
-        scene,
-        camera
-    }
+    var environment_map = CubeTexture.CreateFromPrefilteredData(
+        'environment_3.env',
+        scene
+    );
+    // var map_rotation = Math.PI; // in degrees
+    scene.environmentTexture = environment_map;
+
+    const skybox = MeshBuilder.CreateBox("skyBox", { size: 1000.0 }, scene);
+    const skyboxMaterial = new StandardMaterial("skyBox", scene);
+    skyboxMaterial.backFaceCulling = false;
+    skyboxMaterial.disableLighting = true;
+    skybox.material = skyboxMaterial;
+
+    skybox.infiniteDistance = true;
+
+    skyboxMaterial.disableLighting = true;
+    skyboxMaterial.reflectionTexture = environment_map
+    skyboxMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
+
+    // loadScene({ scene })
+
+    return coreStuff
 }
 
 export default createBabylon

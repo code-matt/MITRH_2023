@@ -15,16 +15,33 @@ import {
 } from "buffered-interpolation-babylon";
 import loadScene from './core/loadScene';
 
+let connected = false
+let connectedClients
+let room
 function App() {
 
   const [ appEntered, setAppEntered ] = useState(false)
+
+
+  const connectAndBeginExperience = async (coreStuff) => {
+    loadScene({ scene: coreStuff.scene })
+    let multiSetup = await createConnectSetupMulti(coreStuff)
+    connectedClients = multiSetup.connectedClients
+    room = multiSetup.room
+    connected = true
+  }
 
   const theApp = async () => {
     console.log("Enter clicked..")
 
     setAppEntered(true)
-    let coreStuff = await createBabylon()
-    let { connectedClients, room } = await createConnectSetupMulti(coreStuff)
+    let coreStuff = await createBabylon({
+      connectAndBeginExperienceFxn: connectAndBeginExperience
+    })
+
+    // const connectAndBeginExperience = async () => {
+    //   // let { connectedClients, room } = await createConnectSetupMulti(coreStuff)
+    // }
 
     let { camera, scene, engine } = coreStuff
 
@@ -66,8 +83,10 @@ function App() {
 
     const mainRenderLoop = () => {
       scene.render()
-      updateCameraPosThrottled() // send to colyseus
-      updateMulti() // process remote players movement smoothly using the interp buffer package
+      if (connected) {
+        updateCameraPosThrottled() // send to colyseus
+        updateMulti() // process remote players movement smoothly using the interp buffer package
+      }
     }
 
     engine.runRenderLoop(mainRenderLoop)
