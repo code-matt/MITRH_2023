@@ -1,7 +1,6 @@
-import { ArcRotateCamera, Color3, CubeTexture, DirectionalLight, Engine, FreeCamera, FreeCameraDeviceOrientationInput, HemisphericLight, Mesh, MeshBuilder, ParticleSystemSet, Scene, ShadowGenerator, StandardMaterial, Texture, UniversalCamera, Vector3, WebXRExperienceHelper } from "@babylonjs/core";
-import { AdvancedDynamicTexture, Button, ColorPicker, Control, StackPanel, TextBlock } from "@babylonjs/gui";
+import { Color3, CubeTexture, Engine, HemisphericLight, MeshBuilder, ParticleSystemSet, Scene, SceneLoader, StandardMaterial, Texture, UniversalCamera, Vector3 } from "@babylonjs/core";
+import { AdvancedDynamicTexture, Button } from "@babylonjs/gui";
 import { GridMaterial } from '@babylonjs/materials'
-import loadScene from "./loadScene";
 
 const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
     let canvas = document.getElementById("mainCanvas")
@@ -10,12 +9,13 @@ const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
 
     var scene = new Scene(engine)
 
-    scene.clearColor = Color3.Black();
+    scene.clearColor = Color3.Black()
 
     ParticleSystemSet.BaseAssetsUrl = "/"
 
-    var camera = new UniversalCamera('camera', new Vector3(0, 1.6, 0), scene)
-
+    var camera = new UniversalCamera('camera', new Vector3(0, 3, 0), scene)
+    camera.applyGravity = true
+    camera.checkCollisions = true
     let coreStuff = {
         canvas,
         engine,
@@ -33,90 +33,115 @@ const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
 
     ground.rotation.x = -Math.PI / 2
 
-    let groundMaterial = new GridMaterial("default", scene);
+    let groundMaterial = new GridMaterial("default", scene)
 
-	groundMaterial.majorUnitFrequency = 5;
-	groundMaterial.minorUnitVisibility = 0.45;
-	groundMaterial.gridRatio = 2;
-	groundMaterial.backFaceCulling = false;
-	groundMaterial.mainColor = new Color3(1, 1, 1);
-	groundMaterial.lineColor = new Color3(1.0, 1.0, 1.0);
-	groundMaterial.opacity = 0.98;
+	groundMaterial.majorUnitFrequency = 5
+	groundMaterial.minorUnitVisibility = 0.45
+	groundMaterial.gridRatio = 2
+	groundMaterial.backFaceCulling = false
+	groundMaterial.mainColor = new Color3(1, 1, 1)
+	groundMaterial.lineColor = new Color3(1.0, 1.0, 1.0)
+	groundMaterial.opacity = 0.98
 
     ground.material = groundMaterial
 
-    const light = new HemisphericLight("light", new Vector3(1, 1, 0));
+    const light = new HemisphericLight("light", new Vector3(1, 1, 0))
 
     // scene.createDefaultEnvironment()
 
     console.log("Babylon finished init...")
 
-    const panel = MeshBuilder.CreatePlane('panel', {width: 1.77, height: 1});
+    const panel = MeshBuilder.CreatePlane('panel', {width: 1.77, height: 1})
 
-    panel.position.x = 0;
+    panel.position.x = 0
 
-    panel.position.y = 1;
+    panel.position.y = 1
 
-    panel.position.z = 1.5;
+    panel.position.z = 1.5
 
-    const panelTexture = AdvancedDynamicTexture.CreateForMesh(panel, 1920, 1080);
+    const panelTexture = AdvancedDynamicTexture.CreateForMesh(panel, 1920, 1080)
 
-    let screenNumber = 1;
-    panelTexture.parseFromURLAsync('textures/screen_1.json');
+    let screenNumber = 1
+    panelTexture.parseFromURLAsync('textures/screen_1.json')
 
-    const skipButtonBox = MeshBuilder.CreatePlane('button', {width: 0.5, height: 0.1});
-    const skipButtonBoxTexture = AdvancedDynamicTexture.CreateForMesh(skipButtonBox, 176, 59);
+    const skipButtonBox = MeshBuilder.CreatePlane('button', {width: 0.5, height: 0.1})
+    const skipButtonBoxTexture = AdvancedDynamicTexture.CreateForMesh(skipButtonBox, 176, 59)
 
-    const skipButton = Button.CreateSimpleButton('btn', '');
+    const skipButton = Button.CreateSimpleButton('btn', '')
 
-    skipButtonBoxTexture.addControl(skipButton);
+    skipButtonBoxTexture.addControl(skipButton)
 
-    skipButtonBox.position.x = 0.55;
+    skipButtonBox.position.x = 0.55
 
-    skipButtonBox.position.y = 1.35;
+    skipButtonBox.position.y = 1.35
 
-    skipButtonBox.position.z = 1.25;
+    skipButtonBox.position.z = 1.25
 
-    const nextButtonBox = MeshBuilder.CreatePlane('button', {width: 0.5, height: 0.1});
-    const buttonBoxTexture = AdvancedDynamicTexture.CreateForMesh(nextButtonBox, 176, 59);
+    const nextButtonBox = MeshBuilder.CreatePlane('button', {width: 0.5, height: 0.1})
+    const buttonBoxTexture = AdvancedDynamicTexture.CreateForMesh(nextButtonBox, 176, 59)
 
-    const nextButton = Button.CreateSimpleButton('btn', '');
+    const nextButton = Button.CreateSimpleButton('btn', '')
 
-    buttonBoxTexture.addControl(nextButton);
+    buttonBoxTexture.addControl(nextButton)
 
-    nextButtonBox.position.x = 0.55;
+    nextButtonBox.position.x = 0.55
 
-    nextButtonBox.position.y = 0.65;
+    nextButtonBox.position.y = 0.65
 
-    nextButtonBox.position.z = 1.5;
+    nextButtonBox.position.z = 1.5
 
     skipButton.onPointerDownObservable.addOnce(() => {
-        panel.dispose();
-        nextButton.dispose();
-        nextButtonBox.dispose();
-        skipButtonBox.dispose();
+        panel.dispose()
+        nextButton.dispose()
+        nextButtonBox.dispose()
+        skipButtonBox.dispose()
         connectAndBeginExperienceFxn(coreStuff)
     })
 
     nextButton.onPointerDownObservable.add(() => {
         if (screenNumber == 3) {
-            panel.dispose();
-            nextButton.dispose();
-            nextButtonBox.dispose();
-            skipButtonBox.dispose();
+            panel.dispose()
+            nextButton.dispose()
+            nextButtonBox.dispose()
+            skipButtonBox.dispose()
             connectAndBeginExperienceFxn(coreStuff)
         }
-        screenNumber+=1;
-        panelTexture.parseFromURLAsync(`textures/screen_${screenNumber}.json`);
+        screenNumber+=1
+        panelTexture.parseFromURLAsync(`textures/screen_${screenNumber}.json`)
     })
 
     camera.attachControl()
 
-    WebXRExperienceHelper.CreateAsync(scene).then(async (xrHelper) => {
-        const sessionManager = await xrHelper.enterXRAsync("immersive-vr", "local-floor" /*, optionalRenderTarget */ );
-    }, (error) => {
-        // no xr...
+    let groundContainer = await SceneLoader.LoadAssetContainerAsync(
+        "/",
+        "WalkingArea.glb",
+        scene
+    )
+    groundContainer.addAllToScene()
+
+    groundContainer.meshes[1].checkCollisions = true
+
+    // let xrHelper = WebXRExperienceHelper.CreateAsync(scene, {
+    //     ground: groundContainer.meshes[1]
+    // }).then(async (xrHelper) => {
+    //     xrHelper.onInitialXRPoseSetObservable.add((xrCamera) => {
+    //         // floor is at y === 2
+    //         xrCamera.y = 3;
+    //     });
+    await scene.createDefaultXRExperienceAsync({
+        floorMeshes: [groundContainer.meshes[1]]
+        // ground: groundContainer.meshes[0]
     })
+    // xrHelper.sessionManager.d
+    // const sessionManager = await xrHelper.enterXRAsync("immersive-vr", "local-floor" /*, optionalRenderTarget */ );
+
+    // xrHelper.teleportation.attach();
+    // xrHelper.pointerSelection.attach();
+    // xrHelper.featuresManager.enableFeature("")
+    // }, (error) => {
+    //     // no xr...
+    // })
+
 
 
     var environment_map = CubeTexture.CreateFromPrefilteredData(
@@ -138,8 +163,8 @@ const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
     skyboxMaterial.reflectionTexture = environment_map
     skyboxMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
 
-    // loadScene({ scene })
-
+    coreStuff.ground = groundContainer.meshes[0] // TODO: Maybe 1
+    // coreStuff.xrHelper = xrHelper
     return coreStuff
 }
 

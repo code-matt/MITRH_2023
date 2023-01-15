@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import { useState } from 'react';
 import createBabylon from './core/setupBabylon';
@@ -18,6 +17,7 @@ import loadScene from './core/loadScene';
 let connected = false
 let connectedClients
 let room
+
 function App() {
 
   const [ appEntered, setAppEntered ] = useState(false)
@@ -38,7 +38,7 @@ function App() {
     let coreStuff = await createBabylon({
       connectAndBeginExperienceFxn: connectAndBeginExperience
     })
-
+    // loadScene({ scene: coreStuff.scene })
     // const connectAndBeginExperience = async () => {
     //   // let { connectedClients, room } = await createConnectSetupMulti(coreStuff)
     // }
