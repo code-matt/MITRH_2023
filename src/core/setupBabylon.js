@@ -2,6 +2,7 @@ import { ArcRotateCamera, Color3, CubeTexture, DirectionalLight, Engine, FreeCam
 import { AdvancedDynamicTexture, Button, ColorPicker, Control, StackPanel, TextBlock } from "@babylonjs/gui";
 import { GridMaterial } from '@babylonjs/materials'
 import loadScene from "./loadScene";
+import { setupTimeoutWidget } from "../components/timeoutWidget";
 
 const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
     let canvas = document.getElementById("mainCanvas")
@@ -13,12 +14,23 @@ const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
     scene.clearColor = Color3.Black();
 
     var camera = new UniversalCamera('camera', new Vector3(0, 1.6, 0), scene)
+    
+    let invisPlane = MeshBuilder.CreatePlane("plane",  {width: 1, height: 1}, scene);
+    let invisTexture = AdvancedDynamicTexture.CreateForMesh(invisPlane, {width: 1000, height: 250});
+    invisTexture.parseFromURLAsync('textures/invisPlane.json');
+    
+    let timeoutFunction = setupTimeoutWidget(invisPlane);
+    timeoutFunction('Welcome to SoulSync!', 10000);
+
+    invisPlane.position.y = 1.6;
+    invisPlane.position.z = 1;
 
     let coreStuff = {
         canvas,
         engine,
         scene,
-        camera
+        camera,
+        timeoutFunction
     }
 
     camera.maxZ = 1000
@@ -73,7 +85,7 @@ const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
 
     skipButtonBox.position.y = 1.35;
 
-    skipButtonBox.position.z = 1.25;
+    skipButtonBox.position.z = 1.5;
 
     const nextButtonBox = MeshBuilder.CreatePlane('button', {width: 0.5, height: 0.1});
     const buttonBoxTexture = AdvancedDynamicTexture.CreateForMesh(nextButtonBox, 176, 59);
