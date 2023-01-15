@@ -39,10 +39,12 @@ const loadScene = async ({ scene }) => {
     const flowerMesh = flowerContainer.meshes
     flowerMesh.forEach((mesh) => {
         const flowers = mesh.getChildMeshes()
+
         flowers.forEach((flower) => {
         })
     })
     flowerContainer.addToScene()
+
 }
 
 export default loadScene

@@ -1,4 +1,4 @@
-import { AbstractMesh, Color3, CubeTexture, Engine, HemisphericLight, MeshBuilder, ParticleSystemSet, Scene, SceneLoader, StandardMaterial, Texture, UniversalCamera, Vector3, WebXRInputSource } from "@babylonjs/core";
+import { AbstractMesh, NodeMaterial, Color3, CubeTexture, Engine, HemisphericLight, MeshBuilder, ParticleSystemSet, Scene, SceneLoader, StandardMaterial, Texture, UniversalCamera, Vector3, WebXRInputSource } from "@babylonjs/core";
 import { AdvancedDynamicTexture, Button } from "@babylonjs/gui";
 import { GridMaterial } from '@babylonjs/materials'
 import { scoreboard } from "../components/scoreboard";
@@ -53,6 +53,53 @@ const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
     // scene.createDefaultEnvironment()
 
     console.log("Babylon finished init...")
+
+    const box = new MeshBuilder.CreateTorus('torus', {diameter: 20, thickness: 5, tessellation: 24}, scene);
+    box.position.y = 20;
+    box.position.x = -50;
+    box.position.z = 0;
+    box.rotation.z = Math.PI/2;
+    NodeMaterial.ParseFromFileAsync("", "materials/nodeMaterial_blue_diamonds.json", scene).then(nodeMaterial => {
+        box.material = nodeMaterial;
+   });
+
+   const box2 = new MeshBuilder.CreateTorus('torus', {diameter: 30, thickness: 2, tessellation: 24}, scene);
+   box2.position.y = 20;
+   box2.position.x = -50;
+   box2.position.z = 0;
+   box2.rotation.z = Math.PI/4;
+   NodeMaterial.ParseFromFileAsync("", "materials/PinkTransparentDiamond_Materials.json", scene).then(nodeMaterial => {
+       box2.material = nodeMaterial;
+  });
+
+  const box3 = new MeshBuilder.CreateTorus('torus', {diameter: 30, thickness: 2, tessellation: 24}, scene);
+  box3.position.y = 20;
+  box3.position.x = -50;
+  box3.position.z = 0;
+  box3.rotation.z = Math.PI;
+  NodeMaterial.ParseFromFileAsync("", "materials/PinkTransparentDiamond_Materials.json", scene).then(nodeMaterial => {
+    box3.material = nodeMaterial;
+ });
+
+ 
+ const box4 = new MeshBuilder.CreateTorus('torus', {diameter: 30, thickness: 2, tessellation: 24}, scene);
+ box4.position.y = 20;
+ box4.position.x = -50;
+ box4.position.z = 0;
+ box4.rotation.z = -Math.PI/4;
+ NodeMaterial.ParseFromFileAsync("", "materials/PinkTransparentDiamond_Materials.json", scene).then(nodeMaterial => {
+    box4.material = nodeMaterial;
+});
+
+const sphere = new MeshBuilder.CreatePolyhedron('polyhedron', scene);
+sphere.position.y = 20;
+sphere.position.x = -50;
+sphere.position.z = 0;
+sphere.rotation.z = Math.PI/2;
+NodeMaterial.ParseFromFileAsync("", "materials/nodeMaterial_blue_diamonds.json", scene).then(nodeMaterial => {
+    sphere.material = nodeMaterial;
+});
+
 
     const panel = MeshBuilder.CreatePlane('panel', {width: 1.77, height: 1})
 
@@ -112,8 +159,6 @@ const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
         screenNumber+=1
         panelTexture.parseFromURLAsync(`textures/screen_${screenNumber}.json`)
     })
-
-    scoreboard();
 
     camera.attachControl()
 
