@@ -60,7 +60,7 @@ function App() {
       autoplay: true
     })
 
-    let { camera, scene, engine } = coreStuff
+    let { camera, scene, engine, defaultExpHelper } = coreStuff
 
     const handleUpdatedCamera = function () {
       let data = {
@@ -72,16 +72,22 @@ function App() {
         rZ: 0,
         rW: 0
       }
+      let cameraToSend
+      const isVRWorking = defaultExpHelper.baseExperience.state === 2
+      if (isVRWorking) {
+        cameraToSend = defaultExpHelper.baseExperience.camera
+      } else {
+        cameraToSend = camera
+      }
 
-      data.pX = camera.position.x;
-      data.pY = camera.position.y;
-      data.pZ = camera.position.z;
-      data.rX = camera.absoluteRotation.x;
-      data.rY = camera.absoluteRotation.y;
-      data.rZ = camera.absoluteRotation.z;
-      data.rW = camera.absoluteRotation.w;
+      data.pX = cameraToSend.position.x;
+      data.pY = cameraToSend.position.y;
+      data.pZ = cameraToSend.position.z;
+      data.rX = 0.0;
+      data.rY = 0.0;
+      data.rZ = 0.0;
+      data.rW = 0.0;
       room.send("transform_update", data)
-
     }
 
     let updateCameraPosThrottled = _.throttle(handleUpdatedCamera, 50)
@@ -91,8 +97,17 @@ function App() {
           if (client.avatar && client.sessionId !== room.userSessionId) {
               client.buffer.update(scene.deltaTime)
               if (client.buffer.state === BufferState.PLAYING) {
-                  client.avatar.position.copyFrom(client.buffer.position);
-                  // client.avatar.rotationQuaternion.copyFrom(client.buffer.quaternion);
+                client.avatar.position.copyFrom(client.buffer.position);
+              }
+              if (client.clientVREnabled) {
+                client.leftHand.buffer.update(scene.deltaTime)
+                client.rightHand.buffer.update(scene.deltaTime)
+                if (client.leftHand.buffer.state === BufferState.PLAYING) {
+                  client.leftHand.mesh.position.copyFrom(client.leftHand.buffer.position);
+                }
+                if (client.rightHand.buffer.state === BufferState.PLAYING) {
+                  client.rightHand.mesh.position.copyFrom(client.rightHand.buffer.position);
+                }
               }
           }
       })
