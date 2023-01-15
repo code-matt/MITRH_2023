@@ -1,6 +1,7 @@
 import { AbstractMesh, Color3, CubeTexture, Engine, HemisphericLight, MeshBuilder, ParticleSystemSet, Scene, SceneLoader, StandardMaterial, Texture, UniversalCamera, Vector3, WebXRInputSource } from "@babylonjs/core";
 import { AdvancedDynamicTexture, Button } from "@babylonjs/gui";
 import { GridMaterial } from '@babylonjs/materials'
+import { scoreboard } from "../components/scoreboard";
 import _ from "lodash";
 
 const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
@@ -77,7 +78,7 @@ const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
 
     skipButtonBox.position.y = 1.35
 
-    skipButtonBox.position.z = 1.25
+    skipButtonBox.position.z = 1.5
 
     const nextButtonBox = MeshBuilder.CreatePlane('button', {width: 0.5, height: 0.1})
     const buttonBoxTexture = AdvancedDynamicTexture.CreateForMesh(nextButtonBox, 176, 59)
@@ -111,6 +112,8 @@ const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
         screenNumber+=1
         panelTexture.parseFromURLAsync(`textures/screen_${screenNumber}.json`)
     })
+
+    scoreboard();
 
     camera.attachControl()
 
