@@ -1,4 +1,4 @@
-import { Color3, CubeTexture, Engine, HemisphericLight, MeshBuilder, ParticleSystemSet, Scene, SceneLoader, StandardMaterial, Texture, UniversalCamera, Vector3 } from "@babylonjs/core";
+import { AbstractMesh, Color3, CubeTexture, Engine, HemisphericLight, MeshBuilder, ParticleSystemSet, Scene, SceneLoader, StandardMaterial, Texture, UniversalCamera, Vector3, WebXRInputSource } from "@babylonjs/core";
 import { AdvancedDynamicTexture, Button } from "@babylonjs/gui";
 import { GridMaterial } from '@babylonjs/materials'
 
@@ -132,14 +132,14 @@ const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
     invisGroundContainer.meshes[1].checkCollisions = true
     invisGroundContainer.meshes[1].isVisible = false
 
-    await scene.createDefaultXRExperienceAsync({
+    let defaultExpHelper = await scene.createDefaultXRExperienceAsync({
         floorMeshes: [
             groundContainer.meshes[1],
             invisGroundContainer.meshes[1]
         ]
     })
 
-
+    coreStuff.defaultExpHelper = defaultExpHelper
 
     var environment_map = CubeTexture.CreateFromPrefilteredData(
         'environment_3.env',

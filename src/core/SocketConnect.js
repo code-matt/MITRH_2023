@@ -8,7 +8,7 @@ import {
 
 const connectedClients = {}
 let avatarMaterial
-const createConnectSetupMulti = async ({ scene }) => {
+const createConnectSetupMulti = async ({ scene, defaultExpHelper }) => {
     avatarMaterial = new StandardMaterial("avatarMat", scene)
     avatarMaterial.emissiveColor = new Color3(255, 255, 255)
 
