@@ -44,6 +44,7 @@ function App() {
     let multiSetup = await createConnectSetupMulti(coreStuff)
     connectedClients = multiSetup.connectedClients
     room = multiSetup.room
+    coreStuff.room = room
     connected = true
   }
 

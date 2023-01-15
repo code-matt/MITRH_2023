@@ -1,6 +1,7 @@
 import { AbstractMesh, Color3, CubeTexture, Engine, HemisphericLight, MeshBuilder, ParticleSystemSet, Scene, SceneLoader, StandardMaterial, Texture, UniversalCamera, Vector3, WebXRInputSource } from "@babylonjs/core";
 import { AdvancedDynamicTexture, Button } from "@babylonjs/gui";
 import { GridMaterial } from '@babylonjs/materials'
+import _ from "lodash";
 
 const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
     let canvas = document.getElementById("mainCanvas")
@@ -138,6 +139,43 @@ const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
             invisGroundContainer.meshes[1]
         ]
     })
+
+    const handleHandUpdate = function (data) {
+        data.mesh.computeWorldMatrix(true);
+        coreStuff.room.send("hand_update", {
+            hand: data.hand,
+            data: {
+                pX: data.mesh.absolutePosition.x,
+                pY: data.mesh.absolutePosition.y,
+                pZ: data.mesh.absolutePosition.z
+            }
+        })
+    }
+  
+    let updateHandPositionThrottled = _.throttle(handleHandUpdate, 50)
+
+    defaultExpHelper.input.onControllerAddedObservable.add((controller) => {
+        const isHand = controller.inputSource.hand;
+        if (isHand) {
+            return
+            //TODO: Def make this work !
+        }
+
+        controller.onMotionControllerInitObservable.add((motionController) =>{
+            const isLeft = motionController.handedness === 'left';
+            controller.onMeshLoadedObservable.add((mesh) => {
+                mesh.onAfterWorldMatrixUpdateObservable.add((e) => {
+                    // room below bets added only after instructions done
+                    if (coreStuff.room) {
+                        updateHandPositionThrottled({
+                            hand: motionController.handedness,
+                            mesh
+                        })
+                    }
+                })
+            });
+        });
+    });
 
     coreStuff.defaultExpHelper = defaultExpHelper
 

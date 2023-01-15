@@ -150,47 +150,6 @@ const createConnectSetupMulti = async ({ scene, defaultExpHelper }) => {
             console.log("a homie was removed")
         }
     })
-
-    const handleHandUpdate = function (data) {
-        data.mesh.computeWorldMatrix(true);
-        room.send("hand_update", {
-            hand: data.hand,
-            data: {
-                pX: data.mesh.absolutePosition.x,
-                pY: data.mesh.absolutePosition.y,
-                pZ: data.mesh.absolutePosition.z
-            }
-        })
-    }
-  
-    let updateHandPositionThrottled = _.throttle(handleHandUpdate, 50)
-
-    // if (isVRWorking) {
-        defaultExpHelper.input.onControllerAddedObservable.add((controller) => {
-            const isHand = controller.inputSource.hand;
-            if (isHand) {
-                return
-                //TODO: Def make this work !
-            }
-    
-            controller.onMotionControllerInitObservable.add((motionController) =>{
-                const isLeft = motionController.handedness === 'left';
-                controller.onMeshLoadedObservable.add((mesh) => {
-                    mesh.onAfterWorldMatrixUpdateObservable.add((e) => {
-                        if (isLeft) {
-                            leftController = mesh;
-                        } else {
-                            rightController = mesh;
-                        }
-                        updateHandPositionThrottled({
-                            hand: motionController.handedness,
-                            mesh
-                        })
-                    })
-                });
-            });
-        });
-    // }
     
     console.log("Colyseus setup and connected !!")
 
