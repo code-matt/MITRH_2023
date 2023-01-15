@@ -13,10 +13,14 @@ import {
   BufferState
 } from "buffered-interpolation-babylon";
 import loadScene from './core/loadScene';
+import { Sound } from '@babylonjs/core';
 
 let connected = false
 let connectedClients
 let room
+
+let introMusic
+let mainMusic
 
 function App() {
 
@@ -24,6 +28,18 @@ function App() {
 
 
   const connectAndBeginExperience = async (coreStuff) => {
+    introMusic.dispose()
+    let entersound = new Sound("Music", "audio/enterround.mp3", coreStuff.scene, null, {
+      loop: false,
+      autoplay: true
+    })
+    entersound.onEndedObservable.addOnce(() => {
+      entersound.dispose()
+    })
+    mainMusic = new Sound("Music", "audio/mainmusic.mp3", coreStuff.scene, null, {
+      loop: true,
+      autoplay: true
+    })
     loadScene({ scene: coreStuff.scene })
     let multiSetup = await createConnectSetupMulti(coreStuff)
     connectedClients = multiSetup.connectedClients
@@ -38,10 +54,11 @@ function App() {
     let coreStuff = await createBabylon({
       connectAndBeginExperienceFxn: connectAndBeginExperience
     })
-    // loadScene({ scene: coreStuff.scene })
-    // const connectAndBeginExperience = async () => {
-    //   // let { connectedClients, room } = await createConnectSetupMulti(coreStuff)
-    // }
+
+    introMusic = new Sound("Music", "audio/instructionsmusic.mp3", coreStuff.scene, null, {
+      loop: true,
+      autoplay: true
+    })
 
     let { camera, scene, engine } = coreStuff
 
@@ -67,7 +84,7 @@ function App() {
 
     }
 
-    let updateCameraPosThrottled = _.throttle(handleUpdatedCamera, 250)
+    let updateCameraPosThrottled = _.throttle(handleUpdatedCamera, 50)
 
     const updateMulti = () => {
       _.forEach(connectedClients, (client) => {

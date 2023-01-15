@@ -14,7 +14,8 @@ const createConnectSetupMulti = async ({ scene }) => {
 
     console.log("connecting to local colyseus...")
 
-    const wsURL = "ws://localhost:2567"
+    // const wsURL = "ws://localhost:2567" // for dev
+    const wsURL = "wss://romaql.us-east-vin.colyseus.net"
 
     var colyseusClient = new Colyseus.Client(wsURL)
     

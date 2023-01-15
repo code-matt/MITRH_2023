@@ -16,6 +16,7 @@ const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
     var camera = new UniversalCamera('camera', new Vector3(0, 3, 0), scene)
     camera.applyGravity = true
     camera.checkCollisions = true
+    camera.speed = 0.5
     let coreStuff = {
         canvas,
         engine,
@@ -121,26 +122,22 @@ const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
 
     groundContainer.meshes[1].checkCollisions = true
 
-    // let xrHelper = WebXRExperienceHelper.CreateAsync(scene, {
-    //     ground: groundContainer.meshes[1]
-    // }).then(async (xrHelper) => {
-    //     xrHelper.onInitialXRPoseSetObservable.add((xrCamera) => {
-    //         // floor is at y === 2
-    //         xrCamera.y = 3;
-    //     });
-    await scene.createDefaultXRExperienceAsync({
-        floorMeshes: [groundContainer.meshes[1]]
-        // ground: groundContainer.meshes[0]
-    })
-    // xrHelper.sessionManager.d
-    // const sessionManager = await xrHelper.enterXRAsync("immersive-vr", "local-floor" /*, optionalRenderTarget */ );
+    let invisGroundContainer = await SceneLoader.LoadAssetContainerAsync(
+        "/",
+        "invisiblewalking_area.glb",
+        scene
+    )
+    invisGroundContainer.addAllToScene()
 
-    // xrHelper.teleportation.attach();
-    // xrHelper.pointerSelection.attach();
-    // xrHelper.featuresManager.enableFeature("")
-    // }, (error) => {
-    //     // no xr...
-    // })
+    invisGroundContainer.meshes[1].checkCollisions = true
+    invisGroundContainer.meshes[1].isVisible = false
+
+    await scene.createDefaultXRExperienceAsync({
+        floorMeshes: [
+            groundContainer.meshes[1],
+            invisGroundContainer.meshes[1]
+        ]
+    })
 
 
 
@@ -148,7 +145,14 @@ const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
         'environment_3.env',
         scene
     );
+
+
+
+    // TODO: try this and rotate scar under the world ? lol.. or fix env map
     // var map_rotation = Math.PI; // in degrees
+
+
+
     scene.environmentTexture = environment_map;
 
     const skybox = MeshBuilder.CreateBox("skyBox", { size: 1000.0 }, scene);
@@ -164,7 +168,6 @@ const createBabylon = async ({ connectAndBeginExperienceFxn }) => {
     skyboxMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
 
     coreStuff.ground = groundContainer.meshes[0] // TODO: Maybe 1
-    // coreStuff.xrHelper = xrHelper
     return coreStuff
 }
 
