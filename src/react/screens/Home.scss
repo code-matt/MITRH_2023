@@ -1,52 +1,74 @@
 .homescreen {
     padding-left: 50px;
     padding-right: 50px;
+    padding-top: 50px;
     display: flex;
     flex-direction: column;
     height: 100vh;
-    color: rgb(232, 115, 255);
-    background-color: #7086ff;
+    color: #000000;
+    background-color: #FFFFFF;
+    background: linear-gradient(52deg, rgba(149,255,216,0.35057773109243695) 0%, rgba(249,254,250,0.8267682072829132) 27%, rgba(112,135,255,0.4150035014005602) 60%, rgba(232,114,255,0.5830707282913166) 100%);
     z-index: 9999999999999999;
     position: fixed;
     width: calc(100vw - 100px);
     // #95ffd8
     .banner-container {
-        justify-content: center;
-        flex: 0.2;
+        justify-content: flex-start;
+        flex: 0.3;
         align-items: center;
         display: flex;
+        flex-direction: column;
         h1 {
             font-size: 100px;
             font-weight: 600;
             letter-spacing: 3px;
+            opacity: 80%;
+            margin-bottom: 0;
+            margin-top: 0;
         }
     }
     .top-container {
         display: flex;
-        justify-content: space-between;
-        flex: 0.6;
+        flex-direction: column;
+        justify-content: center;
+        flex: 0.4;
         align-items: center;
         .card {
             flex: 0.3;
         }
+        h2 {
+            margin-bottom: 0;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 45px;
+            line-height: 53px;
+            color: #7086FF;
+        }
+        div {
+            width: 60%;
+            p {
+                color: #484848;
+            }    
+        }
     }
     .bottom-container {
-        flex: 0.2;
+        flex: 0.3;
         display: flex;
         justify-content: center;
         // align-items: center;
         .button {
-            padding: 20px 10px;
+            padding: 20px 100px;
             width: fit-content;
             height: fit-content;
-            color: #fff;
+            background-color: #7086FF;
+            color: #FFFFFF;
             font-size: 40px;
             letter-spacing: 3px;
-            border: 3px dashed #95ffd8;
-            border-radius: 5px;
+            border: none;
+            border-radius: 50px;
             font-weight: 600;
             &:hover {
-                color: #95ffd8;
+                background-color: #95ffd8;
                 cursor: pointer;
             }
         }
